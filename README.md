@@ -1,19 +1,19 @@
 # algorithms
 Do Study Algorithms!
 
-## Sort Algorithm
+### Sort Algorithm
 + Radix Sort
 
 
-## Problem
-### DFS
+### Problem
+#### DFS
 
 
-### BFS
+#### BFS
 
 
 
-### DP
+#### DP
 
 
-### Parametric Search
+#### Parametric Search
