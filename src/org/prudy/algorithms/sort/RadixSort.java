@@ -7,10 +7,10 @@ package org.prudy.algorithms.sort;
  * 
  * Radix Sort
  */
-public class Radix {
+public class RadixSort implements Sort{
 	
 	public static void main(String[] args) {
-		int[] result = sort(new int[]{42, 2, 3, 11});
+		int[] result = new RadixSort().sort(new int[]{42, 2, 3, 11});
 		for(int number : result) System.out.println(number);
 	}
 	
@@ -19,8 +19,8 @@ public class Radix {
 	 * @param array
 	 * @return sorted array
 	 */
-	public static int[] sort(int[] array) {		
-		final int MAX_LENGTH = Radix.getMaxLength(array), ARRAY_LENGTH = array.length;
+	public int[] sort(int[] array) {		
+		final int MAX_LENGTH = this.getMaxLength(array), ARRAY_LENGTH = array.length;
 		int powed = 1;
 		int[] sortedArray = new int[ARRAY_LENGTH], counts;
 		
@@ -50,13 +50,11 @@ public class Radix {
 	 * @param array
 	 * @return maxLength
 	 */
-	public static int getMaxLength (int[] array) {
-		int powed = 1;
+	public int getMaxLength (int[] array) {
+		int max = 0;
 		for(int number : array){
-			while(number/powed > 10){
-				powed*=10;
-			}
+			if(max < number) max = number;
 		}
-		return (int)Math.log10((double)powed)+1;
+		return (int)Math.log10((double)max)+1;
 	}
 }
