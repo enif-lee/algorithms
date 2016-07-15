@@ -10,37 +10,36 @@ package org.prudy.algorithms.sort;
 public class Radix {
 	
 	public static void main(String[] args) {
-		int[] result = sort(new int[]{42, 2, 3, 11}, 10);
+		int[] result = sort(new int[]{42, 2, 3, 11});
 		for(int number : result) System.out.println(number);
 	}
 	
 	
 	/**
-	 * @param array 정렬할 배열
-	 * @param radix 기수
+	 * @param array
 	 * @return sorted array
 	 */
-	public static int[] sort(int[] array, int radix) {		
-		final int MAX_LENGTH = Radix.getMaxLength(array, radix), ARRAY_LENGTH = array.length, RADIX = radix;
+	public static int[] sort(int[] array) {		
+		final int MAX_LENGTH = Radix.getMaxLength(array), ARRAY_LENGTH = array.length;
 		int powed = 1;
 		int[] sortedArray = new int[ARRAY_LENGTH], counts;
 		
 		for(int p = 0; p < MAX_LENGTH; p++){
-			counts = new int[RADIX];
+			counts = new int[10];
 			
 			for(int number : array){
-				counts[(number/powed) % RADIX]++;
+				counts[(number/powed) % 10]++;
 			}
 			
-			for(int i = 1; i < RADIX; i++ ) counts[i] += counts[i-1];
+			for(int i = 1; i < 10; i++ ) counts[i] += counts[i-1];
 			
 			for(int i = ARRAY_LENGTH-1; i >= 0; i--){
-				sortedArray[counts[(array[i]/powed) %RADIX]-- -1] = array[i];
+				sortedArray[counts[(array[i]/powed) %10]-- -1] = array[i];
 			}
 
 			array = sortedArray;
 			sortedArray = new int[ARRAY_LENGTH];
-			powed *= radix;
+			powed *= 10;
 		}
 		
 		return array;
@@ -48,22 +47,16 @@ public class Radix {
 	
 	
 	/**
-	 * @param array 검색할 배열
-	 * @param radix 기수
-	 * @return 최대 길이
+	 * @param array
+	 * @return maxLength
 	 */
-	public static int getMaxLength (int[] array, int radix) {
-		int maxCount = 1;
-		
+	public static int getMaxLength (int[] array) {
+		int powed = 1;
 		for(int number : array){
-			int count = 1;
-			while(number > 10){
-				number /= 10;
-				count ++;
-			}	
-			if(count > maxCount) maxCount = count;
+			while(number/powed > 10){
+				powed*=10;
+			}
 		}
-		
-		return maxCount;
+		return (int)Math.log10((double)powed)+1;
 	}
 }
