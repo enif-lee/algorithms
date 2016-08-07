@@ -5,42 +5,68 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import net.acmicpc.problem.P_2669.Rectangle;
-
-
-/**
- * @author Lee Jinseoung
- * @problem https://www.acmicpc.net/problem/2669
- *
- */
-public class P_2669 {
+public class Solution {
 	public static List<Rectangle> rectangles = new ArrayList<>();
 	public static Scanner sc = new Scanner(System.in);
-
 	
 	public static void main(String[] args) {
-		int N = sc.nextInt();
+		int T = sc.nextInt();
 		
-		for(int i = 1; i <= N ; i++ ){
-			Rectangle newRect = new Rectangle(sc.nextInt(), sc.nextInt(), sc.nextInt());
-			newRect.index=i;
+		for(int t = 1; t <= T; t++){
+			int N = sc.nextInt();
+			rectangles = new ArrayList<>();
+			List<Rectangle> worsts = new ArrayList<>();
+			List<Rectangle> bests = new ArrayList<>();
+			int top, bottom;
 			
-			for(Rectangle rect : new ArrayList<Rectangle>(rectangles)) {
-				Rectangle crossed = rect.getCrossedRectangle(newRect);
-				if(crossed != null){
-					rect.addCrossedRectangle(crossed);
-					if(rect.getArea() == 0) {
-						rectangles.remove(rect);
+			
+			for(int i = 1; i <= N ; i++ ){
+				Rectangle newRect = new Rectangle(sc.nextInt(), sc.nextInt(), sc.nextInt());
+				newRect.index=i;
+				for(Rectangle rect : new ArrayList<Rectangle>(rectangles)) {
+					Rectangle crossed = rect.getCrossedRectangle(newRect);
+					if(crossed != null){
+						rect.addCrossedRectangle(crossed);
+						if(rect.getArea() <= 0) {
+							rectangles.remove(rect);
+						}
 					}
+				}
+				rectangles.add(newRect);
+			}
+			top = bottom = rectangles.get(0).getArea();
+			
+			// ºÐ±â
+			for(Rectangle rect : rectangles) {
+				int rectArea= rect.getArea();
+				
+				if(rectArea == top){
+					bests.add(rect);
+				} else if (rectArea > top){
+					bests.clear();
+					bests.add(rect);
+					top = rectArea;
+				}
+				
+				if(rectArea == bottom){
+					worsts.add(rect);
+				} else if (rectArea < bottom){
+					worsts.clear();
+					worsts.add(rect);
+					bottom = rectArea;
 				}
 			}
 			
-			rectangles.add(newRect);
+			System.out.printf("#%d %d ", t, worsts.size());
+			for(Rectangle rect : worsts)
+				System.out.printf("%d %d ", rect.index, bottom);
+			
+			System.out.printf("\n%d ", bests.size());
+			for(Rectangle rect : bests)
+				System.out.printf("%d %d ", rect.index, top);
+			System.out.println();
 		}
 		
-		for(Rectangle rect : rectangles) {
-			System.out.printf("%d : %d\n", rect.index, rect.getArea());
-		}
 	}
 
 	
@@ -66,6 +92,10 @@ public class P_2669 {
 			return target.x <  this.x + width && target.x + target.width > this.x &&
 					target.y <  this.y + height && target.y + target.height > this.y;
 		}
+		public boolean isInnered (Rectangle target){
+			return target.x >= this.x  && target.x + target.width  <= this.x + this.width &&
+					target.y >= this.y && target.y + target.height <= this.y + this.height;
+		}
 
 		public Rectangle getCrossedRectangle(Rectangle target) {
 			if (!this.isCrossed(target)) return null;
@@ -79,12 +109,16 @@ public class P_2669 {
 		}
 		
 		public void addCrossedRectangle (Rectangle cross) {
+			for(Rectangle crossed : crossedArea)
+				if(crossed.isInnered(cross)) return;
+			
 			for(Rectangle crossed : new ArrayList<Rectangle>(crossedArea)){
+				
 				Rectangle temp = crossed.getCrossedRectangle(cross);
 				
 				if(temp != null){
 					crossed.addCrossedRectangle(temp);
-					if(crossed.getArea() == 0) {
+					if(crossed.getArea() <= 0) {
 						this.crossedArea.remove(crossed);
 					}
 				}
@@ -99,5 +133,4 @@ public class P_2669 {
 		}
 
 	}
-
 }

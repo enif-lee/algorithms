@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import net.acmicpc.problem.P_2669.Rectangle;
+import net.acmicpc.problem.Solution.Rectangle;
 
 public class P2669Test {
 
